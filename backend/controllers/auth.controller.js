@@ -4,23 +4,32 @@ import { User } from "../models/user.model.js";
 
 
 export const signup = async (req, res) => {
-  const { email, password, name } = req.body; // Destructuring user data from the request body
+  const { email, password, name, role, studentId, faculty, programme, yearOfStudy } = req.body; 
 
   try {
     
     if (!email || !password || !name) {
-      throw new Error("All fields are required");
+      return res.status(400).json({ success: false, message: "Name, email, and password are required fields" });
     }
  
     const userAlreadyExists = await User.findOne({ email });
  
     if (userAlreadyExists) {
-      return res.status(400).json({ success: false, message: "User already exists" });
+      return res.status(400).json({ success: false, message: "User already exists with this email" });
     }
  
     const hashedPassword = await bcryptjs.hash(password, 10);
 
-    const user = new User({ email, password: hashedPassword, name });
+    const user = new User({ 
+      email, 
+      password: hashedPassword, 
+      name, 
+      role: role || "student", 
+      studentId, 
+      faculty, 
+      programme, 
+      yearOfStudy 
+    });
     await user.save();
 
     // Generate a token for the user and set it as a cookie
