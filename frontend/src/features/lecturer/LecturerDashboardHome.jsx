@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { CalendarDays, Users, Clock3 } from "lucide-react";
-import { useAuthStore } from "../store/authStore";
+import { useAuthStore } from "../../store/authStore";
 
 const LecturerDashboardHome = () => {
   const { user } = useAuthStore();

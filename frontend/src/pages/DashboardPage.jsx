@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { useAuthStore } from "../store/authStore";
 import { formatDate } from "../utils/date";
 import { useNavigate } from "react-router-dom"; 
-import UserNav from "../NavBar/UserNav";
+import UserNav from "../components/navbar/UserNav";
 import FloatingShape from "../components/FloatingShape";
 
 const DashboardPage = () => {

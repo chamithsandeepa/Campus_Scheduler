@@ -1,25 +1,25 @@
 import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import SignUpPage from "./pages/SignUpPage";
 import LoginPage from "./pages/LoginPage";
-import AdminSignUp from "./Admin/AdminSignUp";
-import AdminLogin from "./Admin/AdminLogin";
+import AdminSignUp from "./features/admin/AdminSignUp";
+import AdminLogin from "./features/admin/AdminLogin";
 import HomePage from "./pages/HomePage";
-import LecturerLogin from "./Lecturer/LecturerLogin";
+import LecturerLogin from "./features/lecturer/LecturerLogin";
 import LoadingSpinner from "./components/LoadingSpinner";
 import { Toaster } from "react-hot-toast";
 import { useAuthStore } from "./store/authStore";
 import { useEffect } from "react";
-import UserNav from "./NavBar/UserNav";
+import UserNav from "./components/navbar/UserNav";
 import TimeTablePage from "./pages/TimeTablePage";
 import LecturerPage from "./pages/LecturerPage";
 import ProfilePage from "./pages/ProfilePage";
 import AdminLayout from "./layouts/AdminLayout";
 import LecturerLayout from "./layouts/LecturerLayout";
-import AdminDashboardHome from "./Admin/AdminDashboardHome";
-import AdminUsersPage from "./Admin/AdminUsersPage";
-import LecturerDashboardHome from "./Lecturer/LecturerDashboardHome";
-import LecturerTimetablePage from "./Lecturer/LecturerTimetablePage";
-import LecturerSignUp from "./Lecturer/LecturerSignUp";
+import AdminDashboardHome from "./features/admin/AdminDashboardHome";
+import AdminUsersPage from "./features/admin/AdminUsersPage";
+import LecturerDashboardHome from "./features/lecturer/LecturerDashboardHome";
+import LecturerTimetablePage from "./features/lecturer/LecturerTimetablePage";
+import LecturerSignUp from "./features/lecturer/LecturerSignUp";
 import StaffLoginPage from "./pages/StaffLoginPage";
 
 

@@ -2,12 +2,12 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Mail, Lock, Loader } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
-import Input from "../components/Input";
-import { useAuthStore } from "../store/authStore";
+import Input from "../../components/Input";
+import { useAuthStore } from "../../store/authStore";
 
-const REQUIRED_ADMIN_PASSWORD = "Admin123@";
+const REQUIRED_LECTURER_PASSWORD = "Lecturer123@";
 
-const AdminLogin = () => {
+const LecturerLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [localError, setLocalError] = useState("");
@@ -19,22 +19,22 @@ const AdminLogin = () => {
     e.preventDefault();
     setLocalError("");
 
-    if (password !== REQUIRED_ADMIN_PASSWORD) {
-      setLocalError(`Admin password must be ${REQUIRED_ADMIN_PASSWORD}`);
+    if (password !== REQUIRED_LECTURER_PASSWORD) {
+      setLocalError(`Lecturer password must be ${REQUIRED_LECTURER_PASSWORD}`);
       return;
     }
     try {
       const user = await login(email, password);
 
-      if (user?.role === "admin") {
-        navigate("/admin/dashboard");
-      } else if (user?.role === "lecturer") {
+      if (user?.role === "lecturer") {
         navigate("/lecturer/dashboard");
+      } else if (user?.role === "admin") {
+        navigate("/admin/dashboard");
       } else {
         navigate("/home");
       }
     } catch (err) {
-      console.log("Login failed:", err);
+      console.error("Lecturer login failed:", err);
     }
   };
 
@@ -47,9 +47,9 @@ const AdminLogin = () => {
       >
         <div className="w-full h-full bg-emerald-900/40 flex items-end p-8">
           <div className="bg-white/90 rounded-xl p-4 text-sm max-w-sm">
-            <p className="font-semibold text-slate-900">Admin Portal</p>
+            <p className="font-semibold text-slate-900">Lecturer Portal</p>
             <p className="text-slate-600">
-              Log in to manage student timetables, lecturer schedules, and campus notices.
+              Access your teaching timetable, manage sessions, and keep students updated.
             </p>
           </div>
         </div>
@@ -64,17 +64,17 @@ const AdminLogin = () => {
           className="w-full max-w-md bg-white rounded-2xl shadow-xl border border-slate-200 p-8"
         >
           <h2 className="text-2xl font-bold mb-2 text-slate-900 text-center">
-            Admin Login
+            Lecturer Login
           </h2>
           <p className="text-sm text-slate-500 mb-6 text-center">
-            Sign in with your administrator credentials.
+            Sign in to manage your academic schedule and classes.
           </p>
 
           <form onSubmit={handleLogin}>
             <Input
               icon={Mail}
               type="email"
-              placeholder="Admin Email"
+              placeholder="Institutional Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="bg-white border-slate-300 text-slate-900 placeholder-slate-400"
@@ -96,26 +96,35 @@ const AdminLogin = () => {
             <motion.button
               whileHover={{ scale: 1.01 }}
               whileTap={{ scale: 0.99 }}
-              style={{ backgroundColor: "#2563eb", color: "#ffffff" }}
-              className="w-full mt-2 py-3 px-4 font-semibold rounded-lg shadow-md hover:shadow-lg hover:-translate-y-0.5 transition duration-150 focus:outline-none focus:ring-2 focus:ring-offset-2"
+              className="w-full mt-2 py-3 px-4 bg-[#2563eb] text-white font-semibold rounded-lg shadow-md hover:shadow-lg hover:-translate-y-0.5 transition duration-150 focus:outline-none focus:ring-2 focus:ring-[#2563eb] focus:ring-offset-2 focus:ring-offset-white"
               type="submit"
               disabled={isLoading}
             >
-              {isLoading ? <Loader className="w-5 h-5 animate-spin mx-auto" /> : "Login as Admin"}
+              {isLoading ? (
+                <Loader className="w-5 h-5 animate-spin mx-auto" />
+              ) : (
+                "Login as Lecturer"
+              )}
             </motion.button>
           </form>
 
           <div className="mt-6 text-center text-sm text-slate-500">
             <p>
               Don&apos;t have an account?{" "}
-              <Link to="/adminsignup" className="text-[#2563eb] hover:underline font-medium">
-                Admin Register
+              <Link to="/lecturersignup" className="text-[#2563eb] hover:underline font-medium">
+                Lecturer Register
+              </Link>
+            </p>
+            <p>
+              Student?{" "}
+              <Link to="/login" className="text-[#2563eb] hover:underline font-medium">
+                Go to student login
               </Link>
             </p>
             <p className="mt-2">
-              Student or Lecturer?{" "}
-              <Link to="/login" className="text-[#2563eb] hover:underline font-medium">
-                Go to student login
+              Admin?{" "}
+              <Link to="/adminlogin" className="text-[#2563eb] hover:underline font-medium">
+                Go to admin login
               </Link>
             </p>
           </div>
@@ -125,4 +134,5 @@ const AdminLogin = () => {
   );
 };
 
-export default AdminLogin;
+export default LecturerLogin;
+

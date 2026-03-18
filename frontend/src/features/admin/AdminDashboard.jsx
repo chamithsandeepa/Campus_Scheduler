@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
-import FloatingShape from "../components/FloatingShape";
+import FloatingShape from "../../components/FloatingShape";
 
 function AdminDashboard() {
   const [users, setUsers] = useState([]);

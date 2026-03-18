@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { CalendarDays, Users, Clock3 } from "lucide-react";
-import { useAuthStore } from "../store/authStore";
+import { useAuthStore } from "../../store/authStore";
 
 const LecturerDashboard = () => {
   const { user } = useAuthStore();
