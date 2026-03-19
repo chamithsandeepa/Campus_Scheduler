@@ -28,15 +28,8 @@ const LecturerDashboardHome = () => {
   );
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
-        <div>
-          <p className="text-xs font-semibold uppercase tracking-wide text-emerald-600">Lecturer</p>
-          <h1 className="text-2xl md:text-3xl font-bold text-slate-900">
-            Welcome back{user?.name ? `, ${user.name}` : ""}.
-          </h1>
-          <p className="text-sm text-slate-500 mt-1">{today}</p>
-        </div>
         <Link
           to="/lecturer/timetable"
           className="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-emerald-600 text-white text-sm font-semibold hover:bg-emerald-700 transition"
