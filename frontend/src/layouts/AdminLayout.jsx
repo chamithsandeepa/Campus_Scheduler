@@ -1,15 +1,26 @@
 import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
 import { useAuthStore } from "../store/authStore";
+import { LayoutDashboard, Users } from "lucide-react";
+import DashboardHeader from "../components/DashboardHeader";
 
 const navLinkClass = ({ isActive }) =>
   [
-    "block px-3 py-2 rounded-lg text-sm font-semibold transition",
-    isActive ? "bg-blue-600 text-white" : "text-slate-200 hover:bg-white/10 hover:text-white",
+    "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-semibold transition-all duration-200",
+    isActive 
+      ? "bg-blue-50 text-blue-600 shadow-sm" 
+      : "text-slate-500 hover:bg-slate-50 hover:text-blue-600",
   ].join(" ");
 
 const AdminLayout = () => {
   const navigate = useNavigate();
-  const { user, logout } = useAuthStore();
+  const { logout } = useAuthStore();
+  
+  const today = new Date().toLocaleDateString("en-US", {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
 
   const handleLogout = async () => {
     await logout();
@@ -19,49 +30,33 @@ const AdminLayout = () => {
   return (
     <div className="min-h-screen bg-slate-50 flex">
       {/* Side panel */}
-      <aside className="w-64 bg-slate-900 text-white hidden md:flex flex-col">
-        <div className="px-5 py-5 border-b border-white/10">
-          <Link to="/admin/dashboard" className="font-extrabold tracking-tight text-lg">
-            Admin Dashboard
+      <aside 
+        className="w-64 bg-white text-slate-900 hidden md:flex flex-col border-r border-slate-200 shadow-sm"
+      >
+        <div className="px-6 py-8">
+          <Link to="/admin/dashboard" className="font-bold tracking-tight text-xl">
+            Campus <span className="text-blue-600">Scheduler</span>
           </Link>
-          <p className="text-xs text-slate-300 mt-1">{user?.name || "Administrator"}</p>
         </div>
 
-        <nav className="px-3 py-4 space-y-1">
+        <nav className="px-3 py-6 space-y-1">
           <NavLink to="/admin/dashboard" className={navLinkClass}>
+            <LayoutDashboard size={18} />
             Overview
           </NavLink>
           <NavLink to="/admin/users" className={navLinkClass}>
+            <Users size={18} />
             Users
           </NavLink>
         </nav>
-
-        <div className="mt-auto p-4 border-t border-white/10">
-          <button
-            type="button"
-            onClick={handleLogout}
-            className="w-full px-3 py-2 rounded-lg bg-red-600 hover:bg-red-700 transition text-sm font-semibold"
-          >
-            Logout
-          </button>
-        </div>
       </aside>
 
-      {/* Main */}
-      <main className="flex-1">
-        {/* Top strip on small screens */}
-        <div className="md:hidden bg-slate-900 text-white px-4 py-3 flex items-center justify-between">
-          <p className="font-bold">Admin</p>
-          <button
-            type="button"
-            onClick={handleLogout}
-            className="px-3 py-1.5 rounded-lg bg-red-600 text-sm font-semibold"
-          >
-            Logout
-          </button>
-        </div>
+      {/* Main Container */}
+      <main className="flex-1 flex flex-col h-screen overflow-hidden">
+        <DashboardHeader today={today} onLogout={handleLogout} />
 
-        <div className="px-4 md:px-8 py-6">
+        {/* Page Content */}
+        <div className="flex-1 overflow-y-auto px-8 pt-4 pb-6">
           <Outlet />
         </div>
       </main>
@@ -70,4 +65,3 @@ const AdminLayout = () => {
 };
 
 export default AdminLayout;
-

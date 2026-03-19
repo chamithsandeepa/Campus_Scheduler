@@ -9,14 +9,7 @@ const StatCard = ({ label, value }) => (
 
 const AdminDashboardHome = () => {
   return (
-    <div className="space-y-6">
-      <div>
-        <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Admin</p>
-        <h1 className="text-2xl md:text-3xl font-bold text-slate-900">Dashboard</h1>
-        <p className="text-sm text-slate-500 mt-1">
-          Manage student accounts and generate reports.
-        </p>
-      </div>
+    <div className="space-y-4 mt-2">
 
       <div className="grid md:grid-cols-3 gap-4">
         <StatCard label="Users management" value="Available" />

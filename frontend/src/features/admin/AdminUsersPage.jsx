@@ -67,12 +67,6 @@ const AdminUsersPage = () => {
 
   return (
     <div className="space-y-5">
-      <div>
-        <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Admin</p>
-        <h1 className="text-2xl md:text-3xl font-bold text-slate-900">Users</h1>
-        <p className="text-sm text-slate-500 mt-1">Search users and export details.</p>
-      </div>
-
       <div className="bg-white border border-slate-200 rounded-xl p-4 flex flex-col md:flex-row gap-3 md:items-center md:justify-between">
         <div className="flex-1">
           <label className="block text-xs font-semibold text-slate-600 mb-1">Search by User ID</label>
