@@ -4,6 +4,7 @@ import { Loader, Lock, Mail, User } from "lucide-react";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuthStore } from "../../store/authStore";
+import signUpImg from "../../assets/images/lecture.jpeg";
 
 const REQUIRED_LECTURER_PASSWORD = "Lecturer123@";
 
@@ -41,15 +42,22 @@ const LecturerSignUp = () => {
   return (
     <div className="min-h-screen bg-[#f9fafb] flex">
       <div
-        className="hidden md:flex md:w-1/2 bg-cover bg-center"
-        style={{ backgroundImage: "url('/university-campus.jpg')" }}
+        className="hidden md:flex md:w-1/2 bg-cover bg-center relative"
+        style={{ backgroundImage: `url(${signUpImg})`, height: "100vh" }}
       >
-        <div className="w-full h-full bg-emerald-900/40 flex items-end p-8">
-          <div className="bg-white/90 rounded-xl p-4 text-sm max-w-sm">
-            <p className="font-semibold text-slate-900">Lecturer Registration</p>
-            <p className="text-slate-600">Create a lecturer account to access teaching schedules.</p>
+        {/* <div className="absolute inset-0 bg-gradient-to-tr from-slate-950/90 via-slate-900/40 to-transparent flex items-end p-12">
+          <div className="backdrop-blur-xl bg-slate-950/40 border border-white/10 rounded-2xl p-6 max-w-sm shadow-2xl">
+            <h3 className="text-xl font-bold text-white mb-2 drop-shadow-md">Join as Lecturer</h3>
+            <p className="text-slate-100 text-sm leading-relaxed drop-shadow-sm">
+              Become part of our academic community. Register to streamline your teaching activities and stay updated with your lecture schedules.
+            </p>
+            <div className="mt-4 flex gap-2">
+              <div className="h-1 w-8 bg-blue-500 rounded-full" />
+              <div className="h-1 w-4 bg-white/30 rounded-full" />
+              <div className="h-1 w-4 bg-white/30 rounded-full" />
+            </div>
           </div>
-        </div>
+        </div> */}
       </div>
 
       <div className="w-full md:w-1/2 flex items-center justify-center px-6 py-10">

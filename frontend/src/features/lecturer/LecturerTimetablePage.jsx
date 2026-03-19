@@ -12,11 +12,6 @@ const LecturerTimetablePage = () => {
 
   return (
     <div className="space-y-5">
-      <div>
-        <p className="text-xs font-semibold uppercase tracking-wide text-emerald-600">Lecturer</p>
-        <h1 className="text-2xl md:text-3xl font-bold text-slate-900">Timetable</h1>
-        <p className="text-sm text-slate-500 mt-1">A dedicated timetable screen for lecturers.</p>
-      </div>
 
       <div className="bg-white border border-slate-200 rounded-xl overflow-hidden">
         <div className="divide-y divide-slate-100">

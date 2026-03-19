@@ -4,7 +4,7 @@ import { Mail, Lock, Loader } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import Input from "../../components/Input";
 import { useAuthStore } from "../../store/authStore";
-import loginImg from "../../assets/images/login1.jpeg";
+import loginImg from "../../assets/images/lecture.jpeg";
 
 const REQUIRED_LECTURER_PASSWORD = "Lecturer123@";
 
@@ -54,17 +54,22 @@ const LecturerLogin = () => {
     <div className="min-h-screen bg-[#f9fafb] flex">
       {/* Left side image */}
       <div
-        className="hidden md:flex md:w-1/2 bg-cover bg-center"
+        className="hidden md:flex md:w-1/2 bg-cover bg-center relative"
         style={{ backgroundImage: `url(${loginImg})`, height: "100vh" }}
       >
-        <div className="w-full h-full bg-black/60 flex items-end p-8">
-          <div className="bg-white/90 rounded-xl p-4 text-sm max-w-sm">
-            <p className="font-semibold text-slate-900">Lecturer Portal</p>
-            <p className="text-slate-600 font-medium">
-              Access your teaching timetable and manage sessions.
+        {/* <div className="absolute inset-0 bg-gradient-to-tr from-slate-950/90 via-slate-900/40 to-transparent flex items-end p-12">
+          <div className="backdrop-blur-xl bg-slate-950/40 border border-white/10 rounded-2xl p-6 max-w-sm shadow-2xl">
+            <h3 className="text-xl font-bold text-white mb-2 drop-shadow-md">Lecturer Portal</h3>
+            <p className="text-slate-100 text-sm leading-relaxed drop-shadow-sm">
+              Step into your digital workspace. Manage your academic schedule, track sessions, and connect with your departments seamlessly.
             </p>
+            <div className="mt-4 flex gap-2">
+              <div className="h-1 w-8 bg-blue-500 rounded-full" />
+              <div className="h-1 w-4 bg-white/30 rounded-full" />
+              <div className="h-1 w-4 bg-white/30 rounded-full" />
+            </div>
           </div>
-        </div>
+        </div> */}
       </div>
 
       {/* Right side form */}
