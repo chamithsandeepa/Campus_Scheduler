@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useAuthStore } from "../store/authStore";
+import homeImg from "../assets/images/home.jpeg";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 40 },
@@ -58,9 +59,9 @@ const HomePage = () => {
       <section id="home" ref={heroRef} className="relative min-h-screen flex items-center justify-center overflow-hidden">
         <motion.div className="absolute inset-0" style={{ y: heroY }}>
           <div className="absolute inset-0 bg-cover bg-center"
-            style={{ backgroundImage: "url('/university-campus.jpg')" }} />
+            style={{ backgroundImage: `url(${homeImg})` }} />
           <div className="absolute inset-0"
-            style={{ background: "linear-gradient(135deg, rgba(15,23,42,0.82) 0%, rgba(37,99,235,0.55) 100%)" }} />
+            style={{ background: "linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.4) 100%)" }} />
           {/* Floating orbs */}
           <div className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full opacity-10 blur-3xl"
             style={{ background: "#2563eb" }} />
