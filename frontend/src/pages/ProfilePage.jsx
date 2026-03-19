@@ -19,9 +19,9 @@ const ProfilePage = () => {
       name: user?.name || "",
       email: user?.email || "",
       studentId: user?.studentId || "",
-      faculty: user?.faculty || "",
-      programme: user?.programme || "",
       yearOfStudy: user?.yearOfStudy || "",
+      phoneNumber: user?.phoneNumber || "",
+      address: user?.address || "",
       password: "",
     }),
     [user]
@@ -49,9 +49,9 @@ const ProfilePage = () => {
       const payload = {
         name: form.name,
         studentId: form.studentId,
-        faculty: form.faculty,
-        programme: form.programme,
         yearOfStudy: form.yearOfStudy,
+        phoneNumber: form.phoneNumber,
+        address: form.address,
         ...(form.password ? { password: form.password } : {}),
       };
 
@@ -109,9 +109,9 @@ const ProfilePage = () => {
           <FieldRow label="Name" value={user?.name} />
           <FieldRow label="Email" value={user?.email} />
           <FieldRow label="Student ID" value={user?.studentId} />
-          <FieldRow label="Faculty" value={user?.faculty} />
-          <FieldRow label="Programme" value={user?.programme} />
           <FieldRow label="Year of Study" value={user?.yearOfStudy} />
+          <FieldRow label="Phone Number" value={user?.phoneNumber} />
+          <FieldRow label="Address" value={user?.address} />
         </div>
       </div>
 
@@ -178,18 +178,18 @@ const ProfilePage = () => {
               </div>
               <div className="grid md:grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-600 mb-1">Faculty</label>
+                  <label className="block text-xs font-semibold text-slate-600 mb-1">Phone Number</label>
                   <input
-                    value={form.faculty}
-                    onChange={onChange("faculty")}
+                    value={form.phoneNumber}
+                    onChange={onChange("phoneNumber")}
                     className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-slate-600 mb-1">Programme</label>
+                  <label className="block text-xs font-semibold text-slate-600 mb-1">Address</label>
                   <input
-                    value={form.programme}
-                    onChange={onChange("programme")}
+                    value={form.address}
+                    onChange={onChange("address")}
                     className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
@@ -232,4 +232,3 @@ const ProfilePage = () => {
 };
 
 export default ProfilePage;
-

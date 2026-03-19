@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import Input from "../components/Input";
-import { Loader, Lock, Mail, User, BookOpen } from "lucide-react";
+import { Loader, Lock, Mail, User, BookOpen, Phone, MapPin } from "lucide-react";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import PasswordStrengthMeter from "../components/PasswordStrengthMeter";
@@ -12,9 +12,9 @@ const SignUpPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [studentId, setStudentId] = useState("");
-  const [faculty, setFaculty] = useState("");
-  const [programme, setProgramme] = useState("");
   const [year, setYear] = useState("");
+  const [phone, setPhone] = useState("");
+  const [address, setAddress] = useState("");
   const navigate = useNavigate();
 
   const { signup, error, isLoading } = useAuthStore();
@@ -22,7 +22,7 @@ const SignUpPage = () => {
   const handleSignUp = async (e) => {
     e.preventDefault();
 
-    if (!name || !email || !password || !studentId || !faculty || !programme || !year) {
+    if (!name || !email || !password || !studentId || !year || !phone || !address) {
       alert("All fields are required");
       return;
     }
@@ -51,9 +51,9 @@ const SignUpPage = () => {
         email,
         password,
         studentId,
-        faculty,
-        programme,
         yearOfStudy: year,
+        phoneNumber: phone,
+        address,
       });
       navigate("/login");
     } catch (err) {
@@ -121,21 +121,21 @@ const SignUpPage = () => {
             />
 
             <Input
-              icon={User}
+              icon={Phone}
               type="text"
-              placeholder="Faculty (e.g. Computing)"
-              value={faculty}
-              onChange={(e) => setFaculty(e.target.value)}
+              placeholder="Phone Number"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
               containerClassName="mb-3"
               className="bg-white border-slate-300 text-slate-900 placeholder-slate-400 text-sm"
             />
 
             <Input
-              icon={BookOpen}
+              icon={MapPin}
               type="text"
-              placeholder="Programme (e.g. BSc IT)"
-              value={programme}
-              onChange={(e) => setProgramme(e.target.value)}
+              placeholder="Address"
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
               containerClassName="mb-3"
               className="bg-white border-slate-300 text-slate-900 placeholder-slate-400 text-sm"
             />
