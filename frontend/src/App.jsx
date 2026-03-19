@@ -81,7 +81,7 @@ function App() {
     <div>
       {showStudentTopNav ? <UserNav /> : null}
 
-      <div className={showStudentTopNav ? "pt-16" : ""}>
+      <div className={showStudentTopNav && pathname !== "/home" ? "pt-16" : ""}>
         <Routes>
           {/* Root route: send authenticated users to their home, others to student login */}
           <Route
