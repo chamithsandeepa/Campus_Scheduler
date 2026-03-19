@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuthStore } from "../../store/authStore";
 import { UserCircle2, LogOut } from "lucide-react";
@@ -8,6 +8,19 @@ const UserNav = () => {
   const { isAuthenticated, logout, user } = useAuthStore();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
+  const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const handleLogout = async () => {
     await logout();
@@ -20,7 +33,7 @@ const UserNav = () => {
   };
 
   return (
-    <nav className="navbar fixed top-0 left-0 right-0 z-40 bg-white/90 backdrop-blur border-b border-slate-200">
+    <nav className="navbar fixed top-0 left-0 right-0 z-40 bg-white shadow-md border-b border-slate-200">
       <div className="nav-inner">
         <Link to={isAuthenticated ? "/home" : "/login"} className="nav-brand">
           Campus Scheduler
@@ -41,7 +54,7 @@ const UserNav = () => {
               Profile
             </Link>
 
-            <div className="relative">
+            <div className="relative" ref={dropdownRef}>
               <button
                 type="button"
                 className="profile-button"
