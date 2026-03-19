@@ -8,6 +8,7 @@ import {
 import { Link } from "react-router-dom";
 import { useAuthStore } from "../store/authStore";
 import homeImg from "../assets/images/home.jpeg";
+import aboutImg from "../assets/images/about.jpeg";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 40 },
@@ -156,9 +157,7 @@ const HomePage = () => {
           <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}>
             <div className="rounded-2xl overflow-hidden shadow-2xl relative" style={{ height: 400 }}>
               <div className="absolute inset-0 bg-cover bg-center"
-                style={{ backgroundImage: "url('/university-campus.jpg')" }} />
-              <div className="absolute inset-0"
-                style={{ background: "linear-gradient(135deg, rgba(37,99,235,0.7), rgba(124,58,237,0.5))" }} />
+                style={{ backgroundImage: `url(${aboutImg})` }} />
               <div className="absolute inset-0 flex flex-col justify-end p-8">
                 <div className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.12)", backdropFilter: "blur(12px)", border: "1px solid rgba(255,255,255,0.2)" }}>
                   <p className="text-white font-bold text-lg mb-1">Today's Overview</p>

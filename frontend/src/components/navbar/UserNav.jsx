@@ -50,6 +50,9 @@ const UserNav = () => {
             <Link to="/lecturers" className="nav-item">
               Lecturer
             </Link>
+            <Link to="/chat" className="nav-item font-semibold text-blue-600">
+              Chat
+            </Link>
             <Link to="/profile" className="nav-item">
               Profile
             </Link>

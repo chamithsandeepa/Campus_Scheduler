@@ -1,5 +1,5 @@
-import { useLocation } from "react-router-dom";
-import { Bell, LogOut as ExitIcon } from "lucide-react";
+import { useLocation, Link } from "react-router-dom";
+import { MessageSquare, LogOut as ExitIcon } from "lucide-react";
 import { useAuthStore } from "../store/authStore";
 
 const DashboardHeader = ({ today, onLogout }) => {
@@ -14,6 +14,9 @@ const DashboardHeader = ({ today, onLogout }) => {
     if (location.pathname === "/admin/dashboard") {
       return { title: `Welcome back${user?.name ? `, ${user.name}` : ""}.`, subtitle: today };
     }
+    if (location.pathname === "/admin/chat") {
+      return { title: "Messages", subtitle: "Chat with lecturers and students." };
+    }
 
     // Lecturer Routes
     if (location.pathname === "/lecturer/timetable") {
@@ -21,6 +24,9 @@ const DashboardHeader = ({ today, onLogout }) => {
     }
     if (location.pathname === "/lecturer/dashboard") {
       return { title: `Welcome back${user?.name ? `, ${user.name}` : ""}.`, subtitle: today };
+    }
+    if (location.pathname === "/lecturer/chat") {
+      return { title: "Messages", subtitle: "Chat with students and administrators." };
     }
 
     // Default Fallback
@@ -54,14 +60,24 @@ const DashboardHeader = ({ today, onLogout }) => {
           </div>
         </div>
 
-        <button
-          type="button"
-          onClick={onLogout}
-          className="p-2 rounded-lg text-slate-400 hover:text-red-500 hover:bg-red-50 transition-all border border-transparent hover:border-red-100"
-          title="Logout"
-        >
-          <ExitIcon size={22} />
-        </button>
+        <div className="flex items-center gap-4">
+          <Link
+            to={user?.role === "admin" ? "/admin/chat" : "/lecturer/chat"}
+            className="p-2 rounded-lg text-slate-400 hover:text-blue-600 hover:bg-blue-50 transition-all border border-transparent hover:border-blue-100"
+            title="Messages"
+          >
+            <MessageSquare size={22} />
+          </Link>
+
+          <button
+            type="button"
+            onClick={onLogout}
+            className="p-2 rounded-lg text-slate-400 hover:text-red-500 hover:bg-red-50 transition-all border border-transparent hover:border-red-100"
+            title="Logout"
+          >
+            <ExitIcon size={22} />
+          </button>
+        </div>
       </div>
     </div>
   );

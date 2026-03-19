@@ -21,6 +21,8 @@ import LecturerDashboardHome from "./features/lecturer/LecturerDashboardHome";
 import LecturerTimetablePage from "./features/lecturer/LecturerTimetablePage";
 import LecturerSignUp from "./features/lecturer/LecturerSignUp";
 import StaffLoginPage from "./pages/StaffLoginPage";
+import ChatPage from "./features/chat/ChatPage";
+import { useChatStore } from "./store/useChatStore";
 
 
 // Protect student routes (redirect to student login if not authenticated)
@@ -59,6 +61,16 @@ function App() {
   useEffect(() => {
     checkAuth();
   }, [checkAuth]);
+
+  const { connectSocket, disconnectSocket } = useChatStore();
+
+  useEffect(() => {
+    if (user) {
+      connectSocket(user._id);
+    }
+
+    return () => disconnectSocket();
+  }, [user, connectSocket, disconnectSocket]);
 
   if (isCheckingAuth) return <LoadingSpinner />;
 
@@ -141,6 +153,14 @@ function App() {
               </StudentProtectedRoute>
             }
           />
+          <Route
+            path="/chat"
+            element={
+              <StudentProtectedRoute>
+                <ChatPage />
+              </StudentProtectedRoute>
+            }
+          />
           {/* Backwards-compatible route */}
           <Route path="/profileUpdate" element={<Navigate to="/profile" replace />} />
 
@@ -164,6 +184,7 @@ function App() {
             <Route index element={<Navigate to="dashboard" replace />} />
             <Route path="dashboard" element={<AdminDashboardHome />} />
             <Route path="users" element={<AdminUsersPage />} />
+            <Route path="chat" element={<ChatPage />} />
           </Route>
           {/* Backwards-compatible */}
           <Route path="/admindashboard" element={<Navigate to="/admin/dashboard" replace />} />
@@ -180,6 +201,7 @@ function App() {
             <Route index element={<Navigate to="dashboard" replace />} />
             <Route path="dashboard" element={<LecturerDashboardHome />} />
             <Route path="timetable" element={<LecturerTimetablePage />} />
+            <Route path="chat" element={<ChatPage />} />
           </Route>
           {/* Backwards-compatible */}
           <Route path="/lecturerdashboard" element={<Navigate to="/lecturer/dashboard" replace />} />

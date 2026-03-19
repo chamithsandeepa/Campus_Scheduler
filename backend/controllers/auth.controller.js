@@ -4,7 +4,7 @@ import { User } from "../models/user.model.js";
 
 
 export const signup = async (req, res) => {
-  const { email, password, name, role, studentId, faculty, programme, yearOfStudy } = req.body; 
+  const { email, password, name, role, studentId, yearOfStudy, phoneNumber, address } = req.body; 
 
   try {
     if (!email || !password || !name) {
@@ -17,7 +17,7 @@ export const signup = async (req, res) => {
     }
 
     const sliitEmailRegex = /^it\d{8}@my\.sliit\.lk$/i;
-    if (!sliitEmailRegex.test(email)) {
+    if ((role === "student" || !role) && !sliitEmailRegex.test(email)) {
       return res.status(400).json({ success: false, message: "Please use your SLIIT student email (itXXXXXXXX@my.sliit.lk)" });
     }
 
@@ -39,9 +39,9 @@ export const signup = async (req, res) => {
       name, 
       role: role || "student", 
       studentId, 
-      faculty, 
-      programme, 
-      yearOfStudy 
+      yearOfStudy,
+      phoneNumber,
+      address
     });
     await user.save();
 
@@ -122,12 +122,12 @@ export const checkAuth = async (req, res) => {
 
 
 export const updateProfile = async (req, res) => {
-  const { name, email, password } = req.body; 
+  const { name, email, password, studentId, yearOfStudy, phoneNumber, address } = req.body; 
 
   try {
     
-    if (!name && !email && !password) {
-      return res.status(400).json({ success: false, message: "At least one field (name, email, password) is required to update." });
+    if (!name && !email && !password && !studentId && !yearOfStudy && !phoneNumber && !address) {
+      return res.status(400).json({ success: false, message: "No identifying fields provided to update." });
     }
 
     // Find the user by userId from the token
@@ -144,6 +144,12 @@ export const updateProfile = async (req, res) => {
       }
       user.name = name;
     }
+    
+    if (studentId) user.studentId = studentId;
+    if (yearOfStudy) user.yearOfStudy = yearOfStudy;
+    if (phoneNumber) user.phoneNumber = phoneNumber;
+    if (address) user.address = address;
+
     // Email update is now disabled as per requirements
     // if (email) user.email = email; 
     if (password) user.password = await bcryptjs.hash(password, 10); 

@@ -31,13 +31,13 @@ const userSchema = new mongoose.Schema(
 		studentId: {
 			type: String,
 		},
-		faculty: {
-			type: String,
-		},
-		programme: {
-			type: String,
-		},
 		yearOfStudy: {
+			type: String,
+		},
+		phoneNumber: {
+			type: String,
+		},
+		address: {
 			type: String,
 		},
 		

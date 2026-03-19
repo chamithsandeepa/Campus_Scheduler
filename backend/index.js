@@ -8,9 +8,11 @@ import fs from 'fs';
 
 import { connectDB } from "./db/connectDB.js";
 import authRoutes from "./routes/auth.route.js";
+import chatRoutes from "./routes/chat.route.js";
+import { app, server } from "./socket/socket.js";
 
 dotenv.config();
-const app = express();
+
 const PORT = process.env.PORT || 5000;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -29,8 +31,9 @@ if (!fs.existsSync(uploadDir)) {
 // Serve uploaded files statically
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// Routes (only authentication-related for this project)
+// Routes
 app.use("/api/auth", authRoutes);
+app.use("/api/chat", chatRoutes);
 
 // Serve frontend in production
 if (process.env.NODE_ENV === "production") {
@@ -40,7 +43,7 @@ if (process.env.NODE_ENV === "production") {
     });
 }
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
     connectDB();
     console.log(`Server is running on port: ${PORT}`);
 });
