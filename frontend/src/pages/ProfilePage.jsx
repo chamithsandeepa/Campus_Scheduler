@@ -38,10 +38,16 @@ const ProfilePage = () => {
 
   const handleSave = async (e) => {
     e.preventDefault();
+
+    const nameRegex = /^[A-Za-z\s]+$/;
+    if (!nameRegex.test(form.name)) {
+      toast.error("Name should only contain letters and spaces");
+      return;
+    }
+
     try {
       const payload = {
         name: form.name,
-        email: form.email,
         studentId: form.studentId,
         faculty: form.faculty,
         programme: form.programme,
@@ -147,8 +153,9 @@ const ProfilePage = () => {
                 <input
                   type="email"
                   value={form.email}
-                  onChange={onChange("email")}
-                  className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500"
+                  readOnly
+                  title="Email cannot be changed"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-500 cursor-not-allowed outline-none"
                 />
               </div>
               <div className="grid md:grid-cols-2 gap-3">
