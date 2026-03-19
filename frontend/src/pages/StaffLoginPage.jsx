@@ -18,7 +18,7 @@ const StaffLoginPage = () => {
         </p>
 
         {/* Increased gap from space-y-3 to space-y-5 */}
-        <div className="space-y-100">
+        <div className="flex flex-col gap-4">
           <Link to="/adminlogin">
             <button
               type="button"
