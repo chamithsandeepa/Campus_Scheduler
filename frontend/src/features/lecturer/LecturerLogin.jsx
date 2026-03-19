@@ -4,6 +4,7 @@ import { Mail, Lock, Loader } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import Input from "../../components/Input";
 import { useAuthStore } from "../../store/authStore";
+import loginImg from "../../assets/images/login1.jpeg";
 
 const REQUIRED_LECTURER_PASSWORD = "Lecturer123@";
 
@@ -18,6 +19,17 @@ const LecturerLogin = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     setLocalError("");
+
+    if (!email || !password) {
+      setLocalError("Please enter both email and password");
+      return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setLocalError("Please enter a valid email address");
+      return;
+    }
 
     if (password !== REQUIRED_LECTURER_PASSWORD) {
       setLocalError(`Lecturer password must be ${REQUIRED_LECTURER_PASSWORD}`);
@@ -43,30 +55,30 @@ const LecturerLogin = () => {
       {/* Left side image */}
       <div
         className="hidden md:flex md:w-1/2 bg-cover bg-center"
-        style={{ backgroundImage: "url('/university-campus.jpg')" }}
+        style={{ backgroundImage: `url(${loginImg})`, height: "100vh" }}
       >
-        <div className="w-full h-full bg-emerald-900/40 flex items-end p-8">
+        <div className="w-full h-full bg-black/60 flex items-end p-8">
           <div className="bg-white/90 rounded-xl p-4 text-sm max-w-sm">
             <p className="font-semibold text-slate-900">Lecturer Portal</p>
-            <p className="text-slate-600">
-              Access your teaching timetable, manage sessions, and keep students updated.
+            <p className="text-slate-600 font-medium">
+              Access your teaching timetable and manage sessions.
             </p>
           </div>
         </div>
       </div>
 
       {/* Right side form */}
-      <div className="w-full md:w-1/2 flex items-center justify-center px-6 py-10">
+      <div className="w-full md:w-1/2 flex items-center justify-center px-6 py-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
-          className="w-full max-w-md bg-white rounded-2xl shadow-xl border border-slate-200 p-8"
+          className="w-full max-w-md bg-white rounded-2xl shadow-xl border border-slate-200 p-6"
         >
-          <h2 className="text-2xl font-bold mb-2 text-slate-900 text-center">
+          <h2 className="text-xl font-bold mb-1 text-slate-900 text-center">
             Lecturer Login
           </h2>
-          <p className="text-sm text-slate-500 mb-6 text-center">
+          <p className="text-xs text-slate-500 mb-4 text-center">
             Sign in to manage your academic schedule and classes.
           </p>
 
@@ -77,7 +89,8 @@ const LecturerLogin = () => {
               placeholder="Institutional Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="bg-white border-slate-300 text-slate-900 placeholder-slate-400"
+              containerClassName="mb-3"
+              className="bg-white border-slate-300 text-slate-900 placeholder-slate-400 text-sm"
             />
 
             <Input
@@ -86,7 +99,8 @@ const LecturerLogin = () => {
               placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="bg-white border-slate-300 text-slate-900 placeholder-slate-400"
+              containerClassName="mb-3"
+              className="bg-white border-slate-300 text-slate-900 placeholder-slate-400 text-sm"
             />
 
             {(localError || error) && (
@@ -96,37 +110,34 @@ const LecturerLogin = () => {
             <motion.button
               whileHover={{ scale: 1.01 }}
               whileTap={{ scale: 0.99 }}
-              className="w-full mt-2 py-3 px-4 bg-[#2563eb] text-white font-semibold rounded-lg shadow-md hover:shadow-lg hover:-translate-y-0.5 transition duration-150 focus:outline-none focus:ring-2 focus:ring-[#2563eb] focus:ring-offset-2 focus:ring-offset-white"
+              style={{ backgroundColor: "#2563eb", color: "#ffffff" }}
+              className="w-full mt-2 py-2.5 font-semibold rounded-lg shadow-md hover:shadow-lg hover:-translate-y-0.5 transition duration-150 focus:outline-none focus:ring-2 focus:ring-offset-2 text-sm"
               type="submit"
               disabled={isLoading}
             >
               {isLoading ? (
                 <Loader className="w-5 h-5 animate-spin mx-auto" />
               ) : (
-                "Login as Lecturer"
+                "Login "
               )}
             </motion.button>
           </form>
 
-          <div className="mt-6 text-center text-sm text-slate-500">
+          <div className="mt-4 text-center text-xs text-slate-500">
             <p>
               Don&apos;t have an account?{" "}
               <Link to="/lecturersignup" className="text-[#2563eb] hover:underline font-medium">
                 Lecturer Register
               </Link>
             </p>
-            <p>
-              Student?{" "}
+            <div className="mt-1 flex justify-center gap-4">
               <Link to="/login" className="text-[#2563eb] hover:underline font-medium">
-                Go to student login
+                Student Login
               </Link>
-            </p>
-            <p className="mt-2">
-              Admin?{" "}
               <Link to="/adminlogin" className="text-[#2563eb] hover:underline font-medium">
-                Go to admin login
+                Admin Login
               </Link>
-            </p>
+            </div>
           </div>
         </motion.div>
       </div>
