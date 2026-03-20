@@ -6,29 +6,40 @@ import Input from "../components/Input";
 import { useAuthStore } from "../store/authStore";
 import loginImg from "../assets/images/login1.jpeg";
 
+import { toast } from "react-hot-toast";
+
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [errors, setErrors] = useState({});
   const navigate = useNavigate();
 
   const { login, isLoading, error } = useAuthStore();
+
+  const validate = (field, value) => {
+    let errorMsg = "";
+    if (field === "email") {
+      if (value && !/^(it|IT)\d{8}@my\.sliit\.lk$/.test(value)) errorMsg = "Use itXXXXXXXX@my.sliit.lk";
+    }
+    setErrors(prev => ({ ...prev, [field]: errorMsg }));
+  };
 
   const handleLogin = async (e) => {
     e.preventDefault();
 
     if (!email || !password) {
-      alert("Please enter both email and password");
+      toast.error("Please enter both email and password");
       return;
     }
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      alert("Please enter a valid email address");
+    if (errors.email) {
+      toast.error("Please enter a valid student email");
       return;
     }
 
     try {
       const user = await login(email, password);
+      toast.success("Welcome back!");
 
       if (user?.role === "admin") {
         navigate("/admin/dashboard");
@@ -38,7 +49,7 @@ const LoginPage = () => {
         navigate("/home");
       }
     } catch (err) {
-      console.log("Login failed:", err);
+       toast.error(err.response?.data?.message || "Login failed");
     }
   };
 
@@ -77,8 +88,12 @@ const LoginPage = () => {
               type="email"
               placeholder="Student Email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              containerClassName="mb-3"
+              onChange={(e) => {
+                  setEmail(e.target.value);
+                  validate("email", e.target.value);
+              }}
+              errorMessage={errors.email}
+              containerClassName="mb-6"
               className="bg-white border-slate-300 text-slate-900 placeholder-slate-400 text-sm"
             />
 
@@ -88,7 +103,7 @@ const LoginPage = () => {
               placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              containerClassName="mb-3"
+              containerClassName="mb-6"
               className="bg-white border-slate-300 text-slate-900 placeholder-slate-400 text-sm"
             />
 

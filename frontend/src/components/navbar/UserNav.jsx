@@ -44,6 +44,12 @@ const UserNav = () => {
             <Link to="/home" className="nav-item">
               Home
             </Link>
+            <a href="/home#features" className="nav-item">
+              Features
+            </a>
+            <a href="/home#about" className="nav-item">
+              About
+            </a>
             <Link to="/timetable" className="nav-item">
               Time Table
             </Link>

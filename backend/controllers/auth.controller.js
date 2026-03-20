@@ -11,14 +11,26 @@ export const signup = async (req, res) => {
       return res.status(400).json({ success: false, message: "Name, email, and password are required fields" });
     }
 
-    const nameRegex = /^[A-Za-z\s]+$/;
+    const nameRegex = /^[A-Za-z\s]{3,}$/;
     if (!nameRegex.test(name)) {
-      return res.status(400).json({ success: false, message: "Name should only contain letters and spaces" });
+      return res.status(400).json({ success: false, message: "Name must be at least 3 characters and contain only letters and spaces" });
     }
 
-    const sliitEmailRegex = /^it\d{8}@my\.sliit\.lk$/i;
-    if ((role === "student" || !role) && !sliitEmailRegex.test(email)) {
-      return res.status(400).json({ success: false, message: "Please use your SLIIT student email (itXXXXXXXX@my.sliit.lk)" });
+    if (role === "student" || !role) {
+      const sliitEmailRegex = /^(it|IT)\d{8}@my\.sliit\.lk$/;
+      if (!sliitEmailRegex.test(email)) {
+        return res.status(400).json({ success: false, message: "Please use your SLIIT student email (itXXXXXXXX@my.sliit.lk)" });
+      }
+
+      const studentIdRegex = /^(it|IT)\d{8}$/;
+      if (!studentIdRegex.test(studentId)) {
+        return res.status(400).json({ success: false, message: "Student ID must be 'it' followed by 8 digits" });
+      }
+
+      const phoneRegex = /^\d{10}$/;
+      if (!phoneRegex.test(phoneNumber)) {
+        return res.status(400).json({ success: false, message: "Phone number must be exactly 10 digits" });
+      }
     }
 
     if (password.length < 6) {

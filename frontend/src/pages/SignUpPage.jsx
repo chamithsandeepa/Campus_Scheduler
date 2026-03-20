@@ -7,6 +7,8 @@ import PasswordStrengthMeter from "../components/PasswordStrengthMeter";
 import { useAuthStore } from "../store/authStore";
 import loginImg from "../assets/images/login1.jpeg";
 
+import { toast } from "react-hot-toast";
+
 const SignUpPage = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -15,32 +17,44 @@ const SignUpPage = () => {
   const [year, setYear] = useState("");
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
+  const [errors, setErrors] = useState({});
   const navigate = useNavigate();
 
   const { signup, error, isLoading } = useAuthStore();
 
+  const validate = (field, value) => {
+    let errorMsg = "";
+    if (field === "name") {
+      if (value) {
+        if (!/^[A-Za-z\s]*$/.test(value)) errorMsg = "Only letters allowed";
+        else if (value.length < 3) errorMsg = "Min 3 letters required";
+      }
+    } else if (field === "email") {
+      if (value && !/^(it|IT)\d{8}@my\.sliit\.lk$/.test(value)) errorMsg = "Use itXXXXXXXX@my.sliit.lk";
+    } else if (field === "studentId") {
+      if (value && !/^(it|IT)\d{8}$/.test(value)) errorMsg = "Format: itXXXXXXXX";
+    } else if (field === "phone") {
+      if (value && !/^\d{10}$/.test(value)) errorMsg = "Must be 10 digits";
+    } else if (field === "password") {
+      if (value && value.length < 6) errorMsg = "Min 6 characters";
+    }
+
+    setErrors(prev => ({ ...prev, [field]: errorMsg }));
+  };
+
   const handleSignUp = async (e) => {
     e.preventDefault();
 
+    // Check for empty fields
     if (!name || !email || !password || !studentId || !year || !phone || !address) {
-      alert("All fields are required");
+      toast.error("All fields are required");
       return;
     }
 
-    const nameRegex = /^[A-Za-z\s]+$/;
-    if (!nameRegex.test(name)) {
-      alert("Name should only contain letters and spaces");
-      return;
-    }
-
-    const sliitEmailRegex = /^it\d{8}@my\.sliit\.lk$/i;
-    if (!sliitEmailRegex.test(email)) {
-      alert("Please use your SLIIT student email (e.g., it12345678@my.sliit.lk)");
-      return;
-    }
-
-    if (password.length < 6) {
-      alert("Password must be at least 6 characters long");
+    // Ensure no existing format errors
+    const hasErrors = Object.values(errors).some(msg => msg !== "");
+    if (hasErrors) {
+      toast.error("Please fix the errors in the form");
       return;
     }
 
@@ -55,9 +69,10 @@ const SignUpPage = () => {
         phoneNumber: phone,
         address,
       });
+      toast.success("Account created successfully!");
       navigate("/login");
     } catch (err) {
-      console.log(err);
+      toast.error(err.response?.data?.message || "Registration failed");
     }
   };
 
@@ -95,8 +110,12 @@ const SignUpPage = () => {
               type="text"
               placeholder="Full Name"
               value={name}
-              onChange={(e) => setName(e.target.value)}
-              containerClassName="mb-3"
+              onChange={(e) => {
+                  setName(e.target.value);
+                  validate("name", e.target.value);
+              }}
+              errorMessage={errors.name}
+              containerClassName="mb-6"
               className="bg-white border-slate-300 text-slate-900 placeholder-slate-400 text-sm"
             />
 
@@ -105,8 +124,12 @@ const SignUpPage = () => {
               type="email"
               placeholder="Student Email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              containerClassName="mb-3"
+              onChange={(e) => {
+                  setEmail(e.target.value);
+                  validate("email", e.target.value);
+              }}
+              errorMessage={errors.email}
+              containerClassName="mb-6"
               className="bg-white border-slate-300 text-slate-900 placeholder-slate-400 text-sm"
             />
 
@@ -115,8 +138,12 @@ const SignUpPage = () => {
               type="text"
               placeholder="Student ID"
               value={studentId}
-              onChange={(e) => setStudentId(e.target.value)}
-              containerClassName="mb-3"
+              onChange={(e) => {
+                  setStudentId(e.target.value);
+                  validate("studentId", e.target.value);
+              }}
+              errorMessage={errors.studentId}
+              containerClassName="mb-6"
               className="bg-white border-slate-300 text-slate-900 placeholder-slate-400 text-sm"
             />
 
@@ -125,8 +152,12 @@ const SignUpPage = () => {
               type="text"
               placeholder="Phone Number"
               value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              containerClassName="mb-3"
+              onChange={(e) => {
+                  setPhone(e.target.value);
+                  validate("phone", e.target.value);
+              }}
+              errorMessage={errors.phone}
+              containerClassName="mb-6"
               className="bg-white border-slate-300 text-slate-900 placeholder-slate-400 text-sm"
             />
 
@@ -136,7 +167,7 @@ const SignUpPage = () => {
               placeholder="Address"
               value={address}
               onChange={(e) => setAddress(e.target.value)}
-              containerClassName="mb-3"
+              containerClassName="mb-6"
               className="bg-white border-slate-300 text-slate-900 placeholder-slate-400 text-sm"
             />
 
@@ -146,7 +177,7 @@ const SignUpPage = () => {
               placeholder="Year of Study (e.g. 2nd Year)"
               value={year}
               onChange={(e) => setYear(e.target.value)}
-              containerClassName="mb-3"
+              containerClassName="mb-6"
               className="bg-white border-slate-300 text-slate-900 placeholder-slate-400 text-sm"
             />
 
@@ -155,8 +186,12 @@ const SignUpPage = () => {
               type="password"
               placeholder="Password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              containerClassName="mb-3"
+              onChange={(e) => {
+                  setPassword(e.target.value);
+                  validate("password", e.target.value);
+              }}
+              errorMessage={errors.password}
+              containerClassName="mb-6"
               className="bg-white border-slate-300 text-slate-900 placeholder-slate-400 text-sm"
             />
 
