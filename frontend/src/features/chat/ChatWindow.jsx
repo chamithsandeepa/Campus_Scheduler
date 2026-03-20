@@ -47,7 +47,7 @@ const ChatWindow = () => {
       {/* Messages */}
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
         {isLoading ? (
-          <div className="h-full flex items-center justify-center"><LoadingSpinner /></div>
+          <div className="h-full flex items-center justify-center"><LoadingSpinner fullScreen={false} /></div>
         ) : messages.length === 0 ? (
           <div className="h-full flex flex-col items-center justify-center text-slate-400 space-y-2">
               <p className="text-sm">No messages yet</p>

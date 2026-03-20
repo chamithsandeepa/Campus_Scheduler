@@ -15,7 +15,7 @@ const ChatSidebar = () => {
     user.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  if (isLoading) return <div className="h-full flex items-center justify-center"><LoadingSpinner /></div>;
+  if (isLoading) return <div className="h-full flex items-center justify-center"><LoadingSpinner fullScreen={false} /></div>;
 
   return (
     <aside className="h-full w-full md:w-80 border-r border-slate-200 flex flex-col bg-slate-50/50 backdrop-blur-sm">

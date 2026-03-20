@@ -9,6 +9,23 @@ export const sendMessage = async (req, res) => {
 		const { id: receiverId } = req.params;
 		const senderId = req.userId;
 
+		// Security Check: Verify Roles
+		const [sender, receiver] = await Promise.all([
+			User.findById(senderId),
+			User.findById(receiverId)
+		]);
+
+		if (!sender || !receiver) {
+			return res.status(404).json({ error: "User not found" });
+		}
+
+		// Students can only message lecturers
+		if (sender.role === "student" && receiver.role !== "lecturer") {
+			return res.status(403).json({ error: "Students can only message lecturers." });
+		}
+
+		// Add other logic here if needed (e.g. lecturers can't message... whoever)
+
 		let conversation = await Conversation.findOne({
 			participants: { $all: [senderId, receiverId] },
 		});
@@ -29,16 +46,10 @@ export const sendMessage = async (req, res) => {
 			conversation.messages.push(newMessage._id);
 		}
 
-		// await conversation.save();
-		// await newMessage.save();
-
-		// this will run in parallel
 		await Promise.all([conversation.save(), newMessage.save()]);
 
-		// SOCKET IO FUNCTIONALITY WILL GO HERE
 		const receiverSocketId = getReceiverSocketId(receiverId);
 		if (receiverSocketId) {
-			// io.to(<socket_id>).emit() used to send events to specific client
 			io.to(receiverSocketId).emit("newMessage", newMessage);
 		}
 
@@ -56,7 +67,7 @@ export const getMessages = async (req, res) => {
 
 		const conversation = await Conversation.findOne({
 			participants: { $all: [senderId, userToChatId] },
-		}).populate("messages"); // NOT REFERENCE BUT ACTUAL MESSAGES
+		}).populate("messages");
 
 		if (!conversation) return res.status(200).json([]);
 
@@ -72,8 +83,26 @@ export const getMessages = async (req, res) => {
 export const getUsersForSidebar = async (req, res) => {
 	try {
 		const loggedInUserId = req.userId;
+		const currentUser = await User.findById(loggedInUserId);
 
-		const filteredUsers = await User.find({ _id: { $ne: loggedInUserId } }).select("-password");
+		if (!currentUser) {
+			return res.status(401).json({ error: "User not found" });
+		}
+
+		let query = { _id: { $ne: loggedInUserId } };
+
+		// Case 1: Student -> Can only see Lecturers
+		if (currentUser.role === "student") {
+			query.role = "lecturer";
+		}
+		// Case 2: Lecturer -> Can see Students and other Lecturers
+		else if (currentUser.role === "lecturer") {
+			query.role = { $in: ["student", "lecturer"] };
+		}
+		// Case 3: Admin -> Can see everyone
+		// (Default query handles this)
+
+		const filteredUsers = await User.find(query).select("-password");
 
 		res.status(200).json(filteredUsers);
 	} catch (error) {
