@@ -1,9 +1,9 @@
-const Input = ({ icon: Icon, iconColor = "#2563eb", className = "", containerClassName = "mb-6", errorMessage, ...props }) => {
+const Input = ({ icon: Icon, iconColor = "#2563eb", iconSize = "size-5", className = "", containerClassName = "mb-6", errorMessage, ...props }) => {
   return (
     <div className={`${containerClassName}`}>
       <div className="relative">
         <div className='absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none'>
-          <Icon className='size-5' style={{ color: iconColor }} />
+          <Icon className={`${iconSize}`} style={{ color: iconColor }} />
         </div>
         <input
           {...props}

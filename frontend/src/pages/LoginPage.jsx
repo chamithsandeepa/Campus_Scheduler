@@ -39,7 +39,7 @@ const LoginPage = () => {
 
     try {
       const user = await login(email, password);
-      toast.success("Welcome back!");
+      toast.success("Welcome back! Ready for your classes? 📚👋");
 
       if (user?.role === "admin") {
         navigate("/admin/dashboard");
@@ -49,7 +49,7 @@ const LoginPage = () => {
         navigate("/home");
       }
     } catch (err) {
-       toast.error(err.response?.data?.message || "Login failed");
+       toast.error(err.response?.data?.message || "Login failed. Please check your credentials. ❌");
     }
   };
 

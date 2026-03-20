@@ -3,26 +3,40 @@ import Input from "../../components/Input";
 import { Loader, Lock, Mail, User } from "lucide-react";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-hot-toast";
 import { useAuthStore } from "../../store/authStore";
 import signUpImg from "../../assets/images/lecture.jpeg";
-
-const REQUIRED_LECTURER_PASSWORD = "Lecturer123@";
 
 const LecturerSignUp = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [localError, setLocalError] = useState("");
+  const [errors, setErrors] = useState({});
   const navigate = useNavigate();
 
   const { signup, error, isLoading } = useAuthStore();
 
-  const handleSignUp = async (e) => {
-    e.preventDefault();
-    setLocalError("");
+  const validate = (field, value) => {
+    let errorMsg = "";
+    if (field === "name") {
+      if (value) {
+        if (!/^[A-Za-z\s]*$/.test(value)) errorMsg = "Only letters allowed";
+        else if (value.length < 3) errorMsg = "Min 3 letters required";
+      }
+    } else if (field === "email") {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (value && !emailRegex.test(value)) errorMsg = "Enter a valid email";
+    } else if (field === "password") {
+      if (value && value.length < 6) errorMsg = "Min 6 characters";
+    }
+    setErrors(prev => ({ ...prev, [field]: errorMsg }));
+  };
 
-    if (password !== REQUIRED_LECTURER_PASSWORD) {
-      setLocalError(`Lecturer password must be ${REQUIRED_LECTURER_PASSWORD}`);
+  const handleSignUp = async (e) => {
+    if (e) e.preventDefault();
+
+    if (errors.name || errors.email || errors.password) {
+      toast.error("Please correct the errors in the form. ⚠️");
       return;
     }
 
@@ -33,9 +47,11 @@ const LecturerSignUp = () => {
         email,
         password,
       });
+      toast.success("Welcome, Lecturer! Your account has been created. 👨‍🏫✨");
       navigate("/lecturerlogin");
     } catch (err) {
       console.log(err);
+      toast.error(err.response?.data?.message || "Signup failed. ❌");
     }
   };
 
@@ -69,7 +85,7 @@ const LecturerSignUp = () => {
         >
           <h2 className="text-2xl font-bold mb-2 text-slate-900 text-center">Lecturer Register</h2>
           <p className="text-sm text-slate-500 mb-6 text-center">
-            Use the required lecturer password: <span className="font-semibold">{REQUIRED_LECTURER_PASSWORD}</span>
+            Sign up to manage your academic schedule and classes.
           </p>
 
           <form onSubmit={handleSignUp}>
@@ -78,7 +94,12 @@ const LecturerSignUp = () => {
               type="text"
               placeholder="Full Name"
               value={name}
-              onChange={(e) => setName(e.target.value)}
+              onChange={(e) => {
+                setName(e.target.value);
+                validate("name", e.target.value);
+              }}
+              errorMessage={errors.name}
+              containerClassName="mb-6"
               className="bg-white border-slate-300 text-slate-900 placeholder-slate-400"
             />
             <Input
@@ -86,7 +107,12 @@ const LecturerSignUp = () => {
               type="email"
               placeholder="Lecturer Email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                validate("email", e.target.value);
+              }}
+              errorMessage={errors.email}
+              containerClassName="mb-6"
               className="bg-white border-slate-300 text-slate-900 placeholder-slate-400"
             />
             <Input
@@ -94,13 +120,14 @@ const LecturerSignUp = () => {
               type="password"
               placeholder="Password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => {
+                setPassword(e.target.value);
+                validate("password", e.target.value);
+              }}
+              errorMessage={errors.password}
+              containerClassName="mb-6"
               className="bg-white border-slate-300 text-slate-900 placeholder-slate-400"
             />
-
-            {(localError || error) && (
-              <p className="text-red-500 font-semibold mt-2">{localError || error}</p>
-            )}
 
             <motion.button
               style={{ backgroundColor: "#2563eb", color: "#ffffff" }}

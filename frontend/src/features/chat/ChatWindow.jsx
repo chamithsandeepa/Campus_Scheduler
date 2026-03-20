@@ -13,10 +13,7 @@ const ChatWindow = () => {
 
   useEffect(() => {
     getMessages(selectedConversation._id);
-    subscribeToMessages();
-
-    return () => unsubscribeFromMessages();
-  }, [selectedConversation._id, getMessages, subscribeToMessages, unsubscribeFromMessages]);
+  }, [selectedConversation._id, getMessages]);
 
   useEffect(() => {
     if (messageEndRef.current && messages) {
@@ -45,7 +42,7 @@ const ChatWindow = () => {
       </div>
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+      <div className="flex-1 overflow-y-auto p-4 space-y-4 hide-scrollbar">
         {isLoading ? (
           <div className="h-full flex items-center justify-center"><LoadingSpinner fullScreen={false} /></div>
         ) : messages.length === 0 ? (

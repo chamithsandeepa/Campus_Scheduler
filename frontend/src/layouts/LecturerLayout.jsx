@@ -1,4 +1,4 @@
-import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
+import { Link, NavLink, Outlet, useNavigate, useLocation } from "react-router-dom";
 import { useAuthStore } from "../store/authStore";
 import { LayoutDashboard, Calendar } from "lucide-react";
 import DashboardHeader from "../components/DashboardHeader";
@@ -13,6 +13,7 @@ const navLinkClass = ({ isActive }) =>
 
 const LecturerLayout = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { logout } = useAuthStore();
   
   const today = new Date().toLocaleDateString("en-US", {
@@ -56,7 +57,7 @@ const LecturerLayout = () => {
         <DashboardHeader today={today} onLogout={handleLogout} />
 
         {/* Page Content */}
-        <div className="flex-1 overflow-y-auto px-8 pt-4 pb-6">
+        <div className={`flex-1 ${location.pathname.includes('/chat') ? 'overflow-hidden' : 'overflow-y-auto px-8 pt-4 pb-6'}`}>
           <Outlet />
         </div>
       </main>

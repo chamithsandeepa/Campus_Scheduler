@@ -54,6 +54,15 @@ const LecturerProtectedRoute = ({ children }) => {
   return children;
 };
 
+// Protect routes for any authenticated user
+const ProtectedRoute = ({ children }) => {
+  const { isAuthenticated } = useAuthStore();
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
+  return children;
+};
+
 function App() {
   const { isCheckingAuth, checkAuth, isAuthenticated, user } = useAuthStore();
   const location = useLocation();
@@ -62,14 +71,19 @@ function App() {
     checkAuth();
   }, [checkAuth]);
 
-  const { connectSocket, disconnectSocket } = useChatStore();
+  const { connectSocket, disconnectSocket, subscribeToMessages, unsubscribeFromMessages, getUsers } = useChatStore();
 
   useEffect(() => {
     if (user) {
+      getUsers();
       connectSocket(user._id);
+      subscribeToMessages();
     }
 
-    return () => disconnectSocket();
+    return () => {
+      unsubscribeFromMessages();
+      disconnectSocket();
+    };
   }, [user, connectSocket, disconnectSocket]);
 
   if (isCheckingAuth) return <LoadingSpinner />;
@@ -93,7 +107,10 @@ function App() {
     <div>
       {showStudentTopNav ? <UserNav /> : null}
 
-      <div className={showStudentTopNav && pathname !== "/home" ? "pt-16" : ""}>
+      <div className={`
+        ${showStudentTopNav && pathname !== "/home" ? "pt-16" : ""}
+        ${showStudentTopNav && pathname === "/chat" ? "h-screen overflow-hidden" : ""}
+      `}>
         <Routes>
           {/* Root route: send authenticated users to their home, others to student login */}
           <Route
@@ -148,16 +165,18 @@ function App() {
           <Route
             path="/profile"
             element={
-              <StudentProtectedRoute>
+              <ProtectedRoute>
                 <ProfilePage />
-              </StudentProtectedRoute>
+              </ProtectedRoute>
             }
           />
           <Route
             path="/chat"
             element={
               <StudentProtectedRoute>
-                <ChatPage />
+                <div className="h-full bg-white">
+                  <ChatPage />
+                </div>
               </StudentProtectedRoute>
             }
           />

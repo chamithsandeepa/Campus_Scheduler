@@ -14,6 +14,7 @@ export const useAuthStore = create((set) => ({
   error: null,
   isLoading: false,
   isCheckingAuth: true,
+  isUpdatingProfile: false,
   message: null,
 
   // Sign Up
@@ -27,7 +28,7 @@ export const useAuthStore = create((set) => ({
           : { email: emailOrPayload, password, name };
 
       const response = await axios.post(`${API_URL}/signup`, payload);
-      set({ user: response.data.user, isAuthenticated: true, isLoading: false });
+      set({ isLoading: false }); // Don't set user or isAuthenticated
       return response.data.user;
     } catch (error) {
       set({ error: error.response?.data?.message || "Error signing up", isLoading: false });
@@ -35,23 +36,17 @@ export const useAuthStore = create((set) => ({
     }
   },
 
-  // Login
   login: async (email, password) => {
     set({ isLoading: true, error: null });
     try {
       const response = await axios.post(`${API_URL}/login`, { email, password });
-
-      const adminPassword = "Admin123@";
-      const lecturerPassword = "Lecturer123@";
-      const inferredRole =
-        password === adminPassword ? "admin" : password === lecturerPassword ? "lecturer" : "student";
-
-      const user = {
-        ...response.data.user,
-        role: response.data.user?.role || inferredRole,
-      };
-
-      set({ isAuthenticated: true, user, error: null, isLoading: false });
+      const user = response.data.user;
+      set({
+        isAuthenticated: true,
+        user: user,
+        error: null,
+        isLoading: false,
+      });
       return user;
     } catch (error) {
       set({ error: error.response?.data?.message || "Error logging in", isLoading: false });
@@ -83,13 +78,14 @@ export const useAuthStore = create((set) => ({
   },
 
   // Update User Profile
-  updateUser: async (updatedData) => {
-    set({ isLoading: true, error: null });
+  updateProfile: async (updatedData) => {
+    set({ isUpdatingProfile: true, error: null });
     try {
       const response = await axios.put(`${API_URL}/update-profile`, updatedData);
-      set({ user: response.data.user, isLoading: false, error: null });
+      set({ user: response.data.user, isUpdatingProfile: false, error: null });
+      return response.data;
     } catch (error) {
-      set({ error: error.response?.data?.message || "Error updating profile", isLoading: false });
+      set({ error: error.response?.data?.message || "Error updating profile", isUpdatingProfile: false });
       throw error;
     }
   },

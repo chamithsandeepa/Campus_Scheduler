@@ -33,7 +33,7 @@ const ChatSidebar = () => {
         </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto">
+      <div className="flex-1 overflow-y-auto hide-scrollbar">
         {filteredUsers.length === 0 ? (
           <div className="p-8 text-center text-slate-500 text-sm">No users found</div>
         ) : (

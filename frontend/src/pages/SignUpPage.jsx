@@ -69,10 +69,10 @@ const SignUpPage = () => {
         phoneNumber: phone,
         address,
       });
-      toast.success("Account created successfully!");
+      toast.success("Welcome aboard! Your student account is ready. 🎓🚀");
       navigate("/login");
     } catch (err) {
-      toast.error(err.response?.data?.message || "Registration failed");
+      toast.error(err.response?.data?.message || "Registration failed. Please try again. ❌");
     }
   };
 

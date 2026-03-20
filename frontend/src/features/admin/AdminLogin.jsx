@@ -1,42 +1,52 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Mail, Lock, Loader } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-hot-toast";
 import Input from "../../components/Input";
 import { useAuthStore } from "../../store/authStore";
 import loginImg from "../../assets/images/admin.jpeg";
 
-const REQUIRED_ADMIN_PASSWORD = "Admin123@";
-
 const AdminLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [localError, setLocalError] = useState("");
+  const [errors, setErrors] = useState({});
   const navigate = useNavigate();
 
-  const { login, isLoading, error } = useAuthStore();
+  const { login, isLoading, error, isAuthenticated, user: storeUser } = useAuthStore();
+
+  // Redirect if already logged in as admin
+  useEffect(() => {
+    if (isAuthenticated && storeUser?.role === "admin") {
+      navigate("/admin/dashboard");
+    }
+  }, [isAuthenticated, storeUser, navigate]);
+
+  const validate = (field, value) => {
+    let errorMsg = "";
+    if (field === "email") {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (value && !emailRegex.test(value)) errorMsg = "Enter a valid email";
+    } else if (field === "password") {
+      if (value && value.length < 6) errorMsg = "Min 6 characters";
+    }
+    setErrors(prev => ({ ...prev, [field]: errorMsg }));
+  };
 
   const handleLogin = async (e) => {
-    e.preventDefault();
-    setLocalError("");
-
+    if (e) e.preventDefault();
     if (!email || !password) {
-      setLocalError("Please enter both email and password");
+      toast.error("Email and password are required. 🔒");
       return;
     }
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      setLocalError("Please enter a valid email address");
-      return;
-    }
-
-    if (password !== REQUIRED_ADMIN_PASSWORD) {
-      setLocalError(`Admin password must be ${REQUIRED_ADMIN_PASSWORD}`);
+    if (errors.email || errors.password) {
+      toast.error("Please correct the validation errors. ⚠️");
       return;
     }
     try {
       const user = await login(email, password);
+      toast.success("Welcome back, Admin! System dashboard loading... ⚙️🏠");
 
       if (user?.role === "admin") {
         navigate("/admin/dashboard");
@@ -47,6 +57,7 @@ const AdminLogin = () => {
       }
     } catch (err) {
       console.log("Login failed:", err);
+      toast.error(err.response?.data?.message || "Login failed. Please check your credentials. ❌");
     }
   };
 
@@ -93,8 +104,12 @@ const AdminLogin = () => {
               type="email"
               placeholder="Admin Email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              containerClassName="mb-3"
+              onChange={(e) => {
+                setEmail(e.target.value);
+                validate("email", e.target.value);
+              }}
+              errorMessage={errors.email}
+              containerClassName="mb-6"
               className="bg-white border-slate-300 text-slate-900 placeholder-slate-400 text-sm"
             />
 
@@ -103,14 +118,15 @@ const AdminLogin = () => {
               type="password"
               placeholder="Password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              containerClassName="mb-3"
+              onChange={(e) => {
+                setPassword(e.target.value);
+                validate("password", e.target.value);
+              }}
+              errorMessage={errors.password}
+              containerClassName="mb-6"
               className="bg-white border-slate-300 text-slate-900 placeholder-slate-400 text-sm"
             />
 
-            {(localError || error) && (
-              <p className="text-red-500 font-semibold mb-2">{localError || error}</p>
-            )}
 
             <motion.button
               whileHover={{ scale: 1.01 }}

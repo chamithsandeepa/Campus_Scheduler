@@ -50,45 +50,53 @@ export const useChatStore = create((set, get) => ({
 		}
 	},
 
-	subscribeToMessages: () => {
-		const { socket } = get();
-		if (!socket) return;
+	setSelectedConversation: (selectedConversation) => {
+		set({ selectedConversation });
+	},
 
+	connectSocket: (userId) => {
+		if (!userId) return;
+		if (get().socket?.connected) return;
+
+		const socket = io(SOCKET_URL, {
+			// Prefer `auth` so the server can read it via `socket.handshake.auth`.
+			auth: {
+				userId: userId,
+			},
+		});
+		socket.connect();
+
+		set({ socket: socket });
+
+		// Global Message Listener (Unified)
 		socket.on("newMessage", (newMessage) => {
-			const isMessageFromSelectedUser = newMessage.senderId === get().selectedConversation?._id;
-			if (!isMessageFromSelectedUser) return;
+			const state = get();
+			const senderIdStr = String(newMessage.senderId);
+			const isMessageFromSelectedUser =
+				state.selectedConversation &&
+				String(state.selectedConversation._id) === senderIdStr;
+			
+			if (isMessageFromSelectedUser) {
+				set({
+					messages: [...state.messages, newMessage],
+				});
+			}
+		});
 
-			set({
-				messages: [...get().messages, newMessage],
-			});
+		socket.on("getOnlineUsers", (users) => {
+			set({ onlineUsers: users });
 		});
 	},
 
-	unsubscribeFromMessages: () => {
-		const { socket } = get();
-		if (socket) socket.off("newMessage");
+	disconnectSocket: () => {
+		const socket = get().socket;
+		if (socket) {
+			socket.off("newMessage");
+			socket.disconnect();
+		}
+		set({ socket: null });
 	},
 
-	setSelectedConversation: (selectedConversation) => set({ selectedConversation }),
-
-    connectSocket: (userId) => {
-        if (get().socket?.connected) return;
-
-        const socket = io(SOCKET_URL, {
-            query: {
-                userId: userId,
-            },
-        });
-        socket.connect();
-
-        set({ socket: socket });
-
-        socket.on("getOnlineUsers", (users) => {
-            set({ onlineUsers: users });
-        });
-    },
-
-    disconnectSocket: () => {
-        if (get().socket?.connected) get().socket.disconnect();
-    },
+	subscribeToMessages: () => {},
+	unsubscribeFromMessages: () => {},
 }));

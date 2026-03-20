@@ -57,8 +57,8 @@ export const signup = async (req, res) => {
     });
     await user.save();
 
-    // Generate a token for the user and set it as a cookie
-    generateTokenAndSetCookie(res, user._id);
+    // await user.save();
+    // generateTokenAndSetCookie(res, user._id); // REMOVED for "Register then Login" flow
 
     // Send a success response with user details (excluding password)
     res.status(201).json({
@@ -100,7 +100,16 @@ export const login = async (req, res) => {
     res.status(200).json({
       success: true,
       message: "Logged in successfully",
-      user: { ...user._doc, password: undefined }, 
+      user: {
+        _id: user._id,
+        email: user.email,
+        name: user.name,
+        role: user.role,
+        studentId: user.studentId,
+        yearOfStudy: user.yearOfStudy,
+        phoneNumber: user.phoneNumber,
+        address: user.address,
+      },
     });
   } catch (error) {
     console.log("Error in login ", error);
@@ -124,7 +133,19 @@ export const checkAuth = async (req, res) => {
     }
 
     // Send the user details if authenticated
-    res.status(200).json({ success: true, user });
+    res.status(200).json({
+      success: true,
+      user: {
+        _id: user._id,
+        email: user.email,
+        name: user.name,
+        role: user.role,
+        studentId: user.studentId,
+        yearOfStudy: user.yearOfStudy,
+        phoneNumber: user.phoneNumber,
+        address: user.address,
+      },
+    });
   } catch (error) {
     
     console.log("Error in checkAuth ", error);
@@ -172,7 +193,16 @@ export const updateProfile = async (req, res) => {
     res.status(200).json({
       success: true,
       message: "Profile updated successfully",
-      user: { ...user._doc, password: undefined }, 
+      user: {
+        _id: user._id,
+        email: user.email,
+        name: user.name,
+        role: user.role,
+        studentId: user.studentId,
+        yearOfStudy: user.yearOfStudy,
+        phoneNumber: user.phoneNumber,
+        address: user.address,
+      },
     });
   } catch (error) {
     console.log("Error updating profile:", error);
